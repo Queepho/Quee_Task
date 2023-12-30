@@ -26,7 +26,7 @@ Read following steps.
 
         $ ./Quee.sh
 
-  Notice that you can 'cp' the file Quee.sh to wherever you want, to run the script rather that all files. But you must run the script in a folder where the POSCAR file exists.
+  Notice that you can 'cp' the file Quee.sh to wherever you want, to run the script rather than copying all files. But you must run the script in a folder where the POSCAR file exists.
 
   The error message will be in the generated Quee_Output folder.
 
