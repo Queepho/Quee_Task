@@ -1,7 +1,5 @@
 #!/bin/sh
 
-Path_Quee=$3
-
 #--------------------检验前置----------------------
 #创建信息输出文件夹
 if [ ! -d "./Quee_OUTPUT" ]
@@ -121,7 +119,7 @@ cd ./BS
 #----------------通过vaspkit获取初始文件--------------
 #获得K-PATH和Primcell文件并覆盖
 echo "303" | vaspkit >> ../Quee_OUTPUT/Quee.out
-mv PRIMCELL.vasp POSCAR
+#mv PRIMCELL.vasp POSCAR (fixed 可能会导致原子个数不同的问题，故不进行Prim操作 1-16-24)
 mv KPATH.in KPOINTS
 
 #--------------------更改INCAR参数-------------------
@@ -175,7 +173,7 @@ fi
 
 #-----------------创造并运行SBATCH文件----------------
 #复制BS.py文件
-cp ${Path_Quee}/BS.py ./BS.py
+cp ~/work/Quee/BS.py ./BS.py
 
 echo "#!/bin/bash
 echo '<Info> BS程序开始运行' >> ../Quee_OUTPUT/Quee.info
@@ -192,7 +190,7 @@ sleep 1" >> ./BS.sh
 #输出BS.png
 
 #获得.config作图信息
-BS_dpi=$(grep "BS_dpi" ${Path_Quee}/Quee.config | awk -F '= ' '{print $2}')
+BS_dpi=$(grep "BS_dpi" ~/work/Quee/Quee.config | awk -F '= ' '{print $2}')
 
 echo "
 echo '<Info> BS.png开始输出' >> ../Quee_OUTPUT/Quee.info
@@ -206,23 +204,23 @@ rm ./BS.sh
 rm ./BS.py
 
 #-------------------将BS.png上传ftp------------------
-# #ftp创建TASK文件夹并上传BS.png
-# TASK=$2
-# echo '<Info> 开始FTP连接服务器上传BS.png' >> ../Quee_OUTPUT/Quee.info
-# ftp -n <<!
-# open queepho.cc 30021
-# user Queepho 123
-# binary
-# hash
-# cd /Users/BAND
-# mkdir ./$TASK
-# lcd ./
-# prompt
-# put ./BS.png ./$TASK/${TASK}_BS.png
-# close
-# bye
-# !
-# echo '<Info> 上传完毕' >> ../Quee_OUTPUT/Quee.info
+#ftp创建TASK文件夹并上传BS.png
+TASK=$2
+echo '<Info> 开始FTP连接服务器上传BS.png' >> ../Quee_OUTPUT/Quee.info
+ftp -n <<!
+open queepho.cc 30021
+user Queepho 123
+binary
+hash
+cd /Users/BAND
+mkdir ./$TASK
+lcd ./
+prompt
+put ./BS.png ./$TASK/${TASK}_BS.png
+close
+bye
+!
+echo '<Info> 上传完毕' >> ../Quee_OUTPUT/Quee.info
 
 #---------------------复原索取目录--------------------
 cd ../
