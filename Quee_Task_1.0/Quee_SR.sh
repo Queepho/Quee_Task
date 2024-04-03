@@ -82,6 +82,7 @@ grep ENMAX POTCAR | grep -oP '\d*\.\d+' | sed '1~2!d' | sed "s/\..*//g" > file_t
 MAX=$(cat file_temp | sort -rn | head -n 1 )
 temp=`expr ${MAX} / 2`
 ENMAX=`expr ${MAX} + ${temp}`
+ENMAX=$(expr $ENMAX \* 13 / 10)      #(Fixed 4/3/2024; 取1.3倍 经验之谈)
 echo "<Info> ENMAX值设置为 $ENMAX" >> ../Quee_OUTPUT/Quee.info
 sed -i "6s/400/${ENMAX}/1" INCAR
 rm file_temp
@@ -96,7 +97,7 @@ sed -i '23s/0.05/0.075/1' INCAR
 
 #-----------------
 #修改ISIF为3(改变形状和体积）
-sed -i '32s/2/2/1' INCAR
+sed -i '32s/2/3/1' INCAR  
 
 #-----------------
 #修改EDIFFG
@@ -104,7 +105,7 @@ sed -i '33s/-2E-02/-0.001/1' INCAR
 
 #-----------------
 #修改EDIFF
-sed -i '26s/1E-08/1E-9/1' INCAR
+sed -i '26s/1E-08/1E-10/1' INCAR
 
 #-----------------
 #修改ISTART
@@ -170,9 +171,8 @@ else
 	  	sum=0
 		for line in ` sed -n '7,7p' POSCAR | cat `
 		do
-		    sum=$(echo "$sum + $line" | tr -d '\r' | bc)
-
-		    #sum=`expr $sum + $line` (Fixed 4/3/2024; Reason: ambiguous)
+            sum=$(echo "$sum + $line" | tr -d '\r' | bc)
+		    #sum=`expr $sum + $line` (Fixed 4/3/2024; A problem)
 		done
 		echo "<Info> 体系原子总数目为 $sum" >> ../Quee_OUTPUT/Quee.info
 
