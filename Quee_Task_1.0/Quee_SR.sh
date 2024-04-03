@@ -1,7 +1,5 @@
 #!/bin/sh
 
-Path_Quee=$3
-
 #--------------------检验前置----------------------
 #创建信息输出文件夹
 if [ ! -d "./Quee_OUTPUT" ]
@@ -98,7 +96,7 @@ sed -i '23s/0.05/0.075/1' INCAR
 
 #-----------------
 #修改ISIF为3(改变形状和体积）
-sed -i '32s/2/3/1' INCAR
+sed -i '32s/2/2/1' INCAR
 
 #-----------------
 #修改EDIFFG
@@ -169,12 +167,12 @@ else
 		echo "<Warning> OUTCAR中SIGMA展宽未索取，请检查OUTCAR" >> ../Quee_OUTPUT/Quee.info  
 	else  
 	  	echo "<Info> OUTCAR中SIGMA展宽已检索"  >> ../Quee_OUTPUT/Quee.info
-
-	  	#获得NIONS值
 	  	sum=0
 		for line in ` sed -n '7,7p' POSCAR | cat `
 		do
-		    sum=`expr $sum + $line`
+		    sum=$(echo "$sum + $line" | tr -d '\r' | bc)
+
+		    #sum=`expr $sum + $line` (Fixed 4/3/2024; Reason: ambiguous)
 		done
 		echo "<Info> 体系原子总数目为 $sum" >> ../Quee_OUTPUT/Quee.info
 
