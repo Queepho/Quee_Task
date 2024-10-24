@@ -1,0 +1,15 @@
+1. 添加Details参数自定义 可加入公用集群中需手动source的路径
+2. 修改检测slurm程序的参数由slurmd改为sbatch
+
+3. fixed 内部运行vasp时的partition参数依然为phy 现已改为与Quee.sh中一致（传参）
+4. fixed 内部运行vasp时的vasp路径现已改为可自定义（传参）
+5. fixed 内部运行python作图程序时现已改为可自定义（传参）
+
+6. fixed 修复大量细分步骤sh文件中的路径问题
+
+7. 提醒 建议在路径参数中不要加~ 否则可能会无法识别
+
+8. 修复了偶尔会报错Quee_xx.sh文件不存在的问题 原因是Quee.sh主程序在sbatch后紧接着会进行rm操作 现已讲rm操作塞入sbatch内 在运行完Quee_xx.sh后再将其删除
+9. 修复了部分机器bash不会自动在echo指令中识别\n换行符 现已在需要的echo后加上-e转义字符解析
+
+10. 修复了在公用集群中slurm设置有单任务核心数申请上限 导致内部计算srun报错 目前已删除srun操作 直接进行mpirun计算 并且每一小步的计算结果会记录于总slurm.out中
